@@ -3,6 +3,10 @@ package kamysh.repository;
 import kamysh.controller.FilterConfiguration;
 import kamysh.entity.AstartesCategory;
 import kamysh.entity.SpaceMarine;
+import kamysh.filters.SpaceMarineFilter;
+import kamysh.utils.Error;
+import kamysh.utils.InvalidValueException;
+import kamysh.utils.MissingEntityException;
 import kamysh.utils.Utils;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -33,7 +37,7 @@ public class SpaceMarineRepositoryImpl implements SpaceMarineRepository {
     }
 
     @Override
-    public List<SpaceMarine> findAll(FilterConfiguration filterConfiguration) throws ParseException {
+    public List<SpaceMarine> findAll(FilterConfiguration filterConfiguration) throws ParseException, InvalidValueException {
         Session session = sessionFactory.openSession();
         List<SpaceMarine> result;
 
@@ -118,6 +122,7 @@ public class SpaceMarineRepositoryImpl implements SpaceMarineRepository {
                         case "contains":
                             predicates.add(criteriaBuilder.like(root.get(parts[0]), "%" + parts[2] + "%"));
                             break;
+                        default:
                     }
                 }
             }

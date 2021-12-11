@@ -17,8 +17,19 @@ public class Utils {
         resp.getWriter().write(gson.toJson(error));
     }
 
-    public static void writeError(HttpServletResponse resp, int returnCode, int errorId, String errorMessage) throws IOException {
-        writeError(resp, returnCode, new Error(errorId, errorMessage));
+//    public static void writeError(HttpServletResponse resp, ErrorCode errorCode, Error error) throws IOException {
+//        Gson gson = (new GsonBuilder()).create();
+//        resp.setContentType("application/json");
+//        resp.setStatus(returnCode);
+//        resp.getWriter().write(gson.toJson(error));
+//    }
+//
+//    public static void writeError(HttpServletResponse resp, int returnCode, int errorId, String errorMessage) throws IOException {
+//        writeError(resp, returnCode, new Error(errorId, errorMessage));
+//    }
+
+    public static void writeError(HttpServletResponse resp, int returnCode,  ErrorCode errorCode, String errorMessage) throws IOException {
+        writeError(resp, returnCode, new Error(errorCode, errorMessage));
     }
 
 }

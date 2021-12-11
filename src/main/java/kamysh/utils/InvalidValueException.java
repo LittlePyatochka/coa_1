@@ -1,5 +1,6 @@
 package kamysh.utils;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,6 +9,7 @@ import lombok.Setter;
 public class InvalidValueException extends Exception {
 
     private Error error;
+    private ErrorCode errorCode;
 
     public InvalidValueException(Error error) {
         super();
@@ -17,6 +19,11 @@ public class InvalidValueException extends Exception {
     public InvalidValueException(Error error, String message, Throwable cause) {
         super(message, cause);
         this.error = error;
+    }
+
+    public InvalidValueException(ErrorCode errorCode, String message) {
+        super(message);
+        this.errorCode = errorCode;
     }
 
     public InvalidValueException(Error error, String message) {

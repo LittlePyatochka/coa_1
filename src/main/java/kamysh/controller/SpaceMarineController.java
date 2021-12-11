@@ -5,6 +5,7 @@ import kamysh.repository.SpaceMarineRepository;
 import kamysh.repository.SpaceMarineRepositoryImpl;
 import kamysh.service.SpaceMarineService;
 import kamysh.service.SpaceMarineServiceImpl;
+import kamysh.utils.InvalidValueException;
 import kamysh.utils.Utils;
 import kamysh.utils.MissingEntityException;
 import lombok.SneakyThrows;
@@ -105,20 +106,16 @@ public class SpaceMarineController extends HttpServlet {
         Marshaller marshaller = context.createMarshaller();
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 
-        try {
-            if (req.getPathInfo() != null && req.getPathInfo().equals("/health/count")) {
-                Integer h = Integer.parseInt(req.getAttribute("countHealth").toString());
+        if (req.getPathInfo() != null && req.getPathInfo().equals("/health/count")) {
+            Integer h = Integer.parseInt(req.getAttribute("countHealth").toString());
 
-                marshaller.marshal(spaceMarineService.getHealthCount(h), writer);
-            } else {
-                SpaceMarineWithIdDto spaceMarine = (SpaceMarineWithIdDto) req.getAttribute("spaceMarine");
+            marshaller.marshal(spaceMarineService.getHealthCount(h), writer);
+        } else {
+            SpaceMarineWithIdDto spaceMarine = (SpaceMarineWithIdDto) req.getAttribute("spaceMarine");
 
-                SpaceMarineDto savedValue = spaceMarineService.saveOrUpdate(spaceMarine);
-                resp.setStatus(HttpServletResponse.SC_CREATED);
-                marshaller.marshal(savedValue, writer);
-            }
-        } catch (MissingEntityException e) {
-            Utils.writeError(resp, HttpServletResponse.SC_BAD_REQUEST, e.getError());
+            SpaceMarineDto savedValue = spaceMarineService.saveOrUpdate(spaceMarine);
+            resp.setStatus(HttpServletResponse.SC_CREATED);
+            marshaller.marshal(savedValue, writer);
         }
     }
 

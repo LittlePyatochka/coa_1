@@ -1,6 +1,7 @@
 package kamysh.filters;
 
 import kamysh.dto.ChapterDto;
+import kamysh.utils.ErrorCode;
 import kamysh.utils.Utils;
 import lombok.SneakyThrows;
 
@@ -45,31 +46,23 @@ public class ChapterFilter implements Filter {
         ChapterDto chapterDto = new ChapterDto();
 
         if (req.getMethod().equalsIgnoreCase("delete") && req.getPathInfo() == null) {
-            Utils.writeError(resp, HttpServletResponse.SC_BAD_REQUEST, MISSING_ID, "Id must be specified in the end of request");
+            Utils.writeError(resp, HttpServletResponse.SC_BAD_REQUEST, ErrorCode.MISSING_ID, "Id must be specified in the end of request");
             return;
         }
         if (req.getMethod().equalsIgnoreCase("post")) {
             try {
                 chapterDto = (ChapterDto) unmarshaller.unmarshal(servletRequest.getReader());
             } catch (JAXBException e) {
-                    Utils.writeError(resp, HttpServletResponse.SC_BAD_REQUEST, INVALID_XML, "Invalid XML in request body");
+                    Utils.writeError(resp, HttpServletResponse.SC_BAD_REQUEST, ErrorCode.INVALID_XML, "Invalid XML in request body");
                 return;
             }
 
             if (chapterDto.getName() == null) {
-                Utils.writeError(resp, HttpServletResponse.SC_BAD_REQUEST, MISSING_NAME, "Field 'name' must be specified in request body");
-                return;
-            }
-            if (chapterDto.getParentLegion() == null) {
-                Utils.writeError(resp, HttpServletResponse.SC_BAD_REQUEST, MISSING_PARENT_LEGION, "Field 'parentLegion' must be specified in request body");
+                Utils.writeError(resp, HttpServletResponse.SC_BAD_REQUEST, ErrorCode.MISSING_NAME, "Field 'name' must be specified in request body");
                 return;
             }
             if (!(chapterDto.getName().length() > 0)) {
-                Utils.writeError(resp, HttpServletResponse.SC_BAD_REQUEST, INVALID_NAME_VALUE, "Length of field 'name' must be bigger than 0");
-                return;
-            }
-            if (!(chapterDto.getParentLegion().length() > 0)) {
-                Utils.writeError(resp, HttpServletResponse.SC_BAD_REQUEST, INVALID_PARENT_LEGION, "Length of field 'parentLegion' must be bigger than 0");
+                Utils.writeError(resp, HttpServletResponse.SC_BAD_REQUEST, ErrorCode.INVALID_NAME_VALUE, "Length of field 'name' must be bigger than 0");
                 return;
             }
 
@@ -82,7 +75,7 @@ public class ChapterFilter implements Filter {
                     Long id = Long.valueOf(req.getPathInfo().replaceAll("^/", ""));
                     req.setAttribute("id", id);
                 } catch (NumberFormatException e) {
-                    Utils.writeError(resp, HttpServletResponse.SC_BAD_REQUEST, WRONG_ID_FORMAT, "Field 'id' must be integer");
+                    Utils.writeError(resp, HttpServletResponse.SC_BAD_REQUEST, ErrorCode.WRONG_ID_FORMAT, "Field 'id' must be integer");
                     return;
                 }
             }

@@ -2,6 +2,7 @@ package kamysh.filters;
 
 import com.google.gson.*;
 import kamysh.dto.CoordinatesDto;
+import kamysh.utils.ErrorCode;
 import kamysh.utils.Utils;
 import lombok.SneakyThrows;
 
@@ -45,22 +46,22 @@ public class CoordinatesFilter implements Filter {
         CoordinatesDto coordinatesDto = new CoordinatesDto();
 
         if (req.getMethod().equalsIgnoreCase("delete") && req.getPathInfo() == null) {
-            Utils.writeError(resp, HttpServletResponse.SC_BAD_REQUEST, MISSING_ID, "Id must be specified in the end of request");
+            Utils.writeError(resp, HttpServletResponse.SC_BAD_REQUEST, ErrorCode.MISSING_ID, "Id must be specified in the end of request");
             return;
         }
         if (req.getMethod().equalsIgnoreCase("post")) {
             try {
                 coordinatesDto = (CoordinatesDto) unmarshaller.unmarshal(servletRequest.getReader());
             } catch (JAXBException e) {
-                Utils.writeError(resp, HttpServletResponse.SC_BAD_REQUEST, INVALID_XML, "Invalid XML in request body");
+                Utils.writeError(resp, HttpServletResponse.SC_BAD_REQUEST, ErrorCode.INVALID_XML, "Invalid XML in request body");
                 return;
             }
             if (coordinatesDto.getX() == null) {
-                Utils.writeError(resp, HttpServletResponse.SC_BAD_REQUEST, MISSING_X, "Field 'x' must be specified in request body");
+                Utils.writeError(resp, HttpServletResponse.SC_BAD_REQUEST, ErrorCode.MISSING_X, "Field 'x' must be specified in request body");
                 return;
             }
             if (coordinatesDto.getY() == null) {
-                Utils.writeError(resp, HttpServletResponse.SC_BAD_REQUEST, MISSING_Y, "Field 'y' must be specified in request body");
+                Utils.writeError(resp, HttpServletResponse.SC_BAD_REQUEST, ErrorCode.MISSING_Y, "Field 'y' must be specified in request body");
                 return;
             }
             req.setAttribute("coordinates", coordinatesDto);
@@ -72,7 +73,7 @@ public class CoordinatesFilter implements Filter {
                     Long id = Long.valueOf(req.getPathInfo().replaceAll("^/", ""));
                     req.setAttribute("id", id);
                 } catch (NumberFormatException e) {
-                    Utils.writeError(resp, HttpServletResponse.SC_BAD_REQUEST, WRONG_ID_FORMAT, "Field 'id' must be integer");
+                    Utils.writeError(resp, HttpServletResponse.SC_BAD_REQUEST, ErrorCode.WRONG_ID_FORMAT, "Field 'id' must be integer");
                     return;
                 }
             }

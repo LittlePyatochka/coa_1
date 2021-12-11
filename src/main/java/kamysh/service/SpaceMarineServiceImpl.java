@@ -8,6 +8,8 @@ import kamysh.entity.SpaceMarine;
 import kamysh.filters.SpaceMarineFilter;
 import kamysh.mapper.SpaceMarineMapper;
 import kamysh.repository.*;
+import kamysh.utils.ErrorCode;
+import kamysh.utils.InvalidValueException;
 import kamysh.utils.MissingEntityException;
 import kamysh.utils.Error;
 import lombok.Data;
@@ -34,14 +36,11 @@ public class SpaceMarineServiceImpl implements SpaceMarineService {
     @SneakyThrows
     @Override
     public List<SpaceMarineDto> findAll(FilterConfiguration filterConfiguration) {
-        List<SpaceMarine> spaceMarines = spaceMarineRepository.findAll(filterConfiguration);
-
         List<SpaceMarineDto> result = new ArrayList<>();
-
+        List<SpaceMarine> spaceMarines = spaceMarineRepository.findAll(filterConfiguration);
         for (SpaceMarine spaceMarine : spaceMarines) {
             result.add(spaceMarineMapper.entityToDto(spaceMarine));
         }
-
         return result;
     }
 
@@ -53,14 +52,14 @@ public class SpaceMarineServiceImpl implements SpaceMarineService {
         SpaceMarine spaceMarine = spaceMarineMapper.dtoToEntity(dto);
         spaceMarine.setCoordinates(coordinatesRepository.findById(dto.getCoordinates()));
         if (spaceMarine.getCoordinates() == null) {
-            throw new MissingEntityException(new Error(SpaceMarineFilter.MISSING_COORDINATES_ENTITY, "Could not found specified coordinates"));
+            throw new MissingEntityException(new Error(ErrorCode.MISSING_COORDINATES_ENTITY, "Could not found specified coordinates"));
         }
         spaceMarine.setChapter(chapterRepository.findById(dto.getChapter()));
         if (spaceMarine.getChapter() == null) {
-            throw new MissingEntityException(new Error(SpaceMarineFilter.MISSING_CHAPTER_ENTITY, "Could not found specified chapter"));
+            throw new MissingEntityException(new Error(ErrorCode.MISSING_CHAPTER_ENTITY, "Could not found specified chapter"));
         }
 
-        if (spaceMarine.getId() == null ) {
+        if (spaceMarine.getId() == null) {
             spaceMarine.setCreationDate(new Date());
             spaceMarineRepository.save(spaceMarine);
             return spaceMarineMapper.entityToDto(spaceMarine);

@@ -21,13 +21,17 @@ public class SessionFactoryBuilder {
 
         properties.put(Environment.DRIVER, "org.postgresql.Driver");
         properties.put(Environment.CURRENT_SESSION_CONTEXT_CLASS, "thread");
-//        properties.put(Environment.URL, System.getenv("DATABASE_URL"));
-//        properties.put(Environment.USER, System.getenv("DATABASE_USER"));
-//        properties.put(Environment.PASS, System.getenv("DATABASE_PASSWORD"));
 
-        properties.put(Environment.URL, System.getProperty("DATABASE_URL"));
-        properties.put(Environment.USER, System.getProperty("DATABASE_USER"));
-        properties.put(Environment.PASS, System.getProperty("DATABASE_PASSWORD"));
+        String DATABASE_URL = System.getenv("DATABASE_URL");
+        if (DATABASE_URL == null) DATABASE_URL = System.getProperty("DATABASE_URL");
+        String DATABASE_USER = System.getenv("DATABASE_USER");
+        if (DATABASE_USER == null) DATABASE_USER = System.getProperty("DATABASE_USER");
+        String DATABASE_PASSWORD = System.getenv("DATABASE_PASSWORD");
+        if (DATABASE_PASSWORD == null) DATABASE_PASSWORD = System.getProperty("DATABASE_PASSWORD");
+
+        properties.put(Environment.URL, DATABASE_URL);
+        properties.put(Environment.USER, DATABASE_USER);
+        properties.put(Environment.PASS, DATABASE_PASSWORD);
 
         properties.put(Environment.DIALECT, "org.hibernate.dialect.PostgreSQL9Dialect");
         properties.put(Environment.FORMAT_SQL, true);

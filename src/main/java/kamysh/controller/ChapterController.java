@@ -77,13 +77,13 @@ public class ChapterController extends HttpServlet {
 
         ChapterDto chapter = (ChapterDto) req.getAttribute("chapter");
 
-        try {
+//        try {
             ChapterDto savedValue = chapterService.save(chapter);
             resp.setStatus(HttpServletResponse.SC_CREATED);
             marshaller.marshal(chapter, writer);
-        } catch (InvalidValueException e) {
-            Utils.writeError(resp, HttpServletResponse.SC_BAD_REQUEST, e.getError());
-        }
+//        } catch (InvalidValueException e) {
+//            Utils.writeError(resp, HttpServletResponse.SC_BAD_REQUEST, e.getError());
+//        }
     }
 
     @Override
